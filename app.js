@@ -3,17 +3,25 @@ const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const app = express();
 const mongoose = require('mongoose');
+const encrypt = require('mongoose-encryption');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
+// database connection
 mongoose.connect('mongodb://localhost:27017/userDB', {useNewUrlParser: true, useUnifiedTopology: true});
-
+// DB Schema
 const userSchema = new mongoose.Schema({
     email: String,
     password: String
 });
+
+// encryption of the fields 
+const secrets = 'ThisIsOutSecretKey';
+// use this plugin before the model gets created
+userSchema.plugin(encrypt, {secret: secrets, encryptedFields: ['password']}); 
+// Data Model
 const User = mongoose.model('User', userSchema);
 
 app.get('/', function(req, res) {
@@ -29,7 +37,6 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/register', function(req, res) {
-
     let user = new User({
         email:  req.body.username,
         password: req.body.password
