@@ -31,8 +31,8 @@ app.use(passport.session()); // also use passport for session
 // database connection
 mongoose.connect('mongodb://localhost:27017/userDB', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set('useCreateIndex', true);
-// DB Schema
 
+// DB Schema
 const userSchema = new mongoose.Schema({
     email: String,
     password: String,
